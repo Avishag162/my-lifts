@@ -1,0 +1,21 @@
+# Render free web service. The data lives in a free Turso database (Render's free disk is wiped on every restart).
+# Set TURSO_DATABASE_URL and TURSO_AUTH_TOKEN in the Render dashboard when asked.
+services:
+  - type: web
+    name: my-lifts
+    runtime: node
+    plan: free
+    buildCommand: npm install --include=dev && npm install --no-save libsql && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: SECURE_COOKIES
+        value: "true"
+      - key: DB_PATH
+        value: /tmp/my-lifts/replica.db
+      - key: TURSO_DATABASE_URL
+        sync: false
+      - key: TURSO_AUTH_TOKEN
+        sync: false

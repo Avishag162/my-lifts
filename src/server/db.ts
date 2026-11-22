@@ -1,5 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { dirname } from 'node:path';
 
 export type DB = DatabaseSync;
@@ -147,10 +148,30 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   session_days: '90',
 };
 
+/**
+ * Opens the database. Normally a local SQLite file at `path`.
+ * When TURSO_DATABASE_URL is set (a free cloud host with no lasting disk), `path` is a local copy kept in sync with
+ * the Turso database, which holds the real data: reads are local, writes go to Turso. Needs the `libsql` package.
+ */
 export function openDb(path: string): DB {
+  const tursoUrl = process.env.TURSO_DATABASE_URL?.trim();
   if (path !== ':memory:') mkdirSync(dirname(path), { recursive: true });
+  if (tursoUrl && path !== ':memory:') return finishOpen(openTurso(path, tursoUrl));
   const db = new DatabaseSync(path);
   if (path !== ':memory:') db.exec('PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000; PRAGMA synchronous = NORMAL;');
+  return finishOpen(db);
+}
+
+function openTurso(path: string, url: string): DB {
+  // libsql has the same synchronous prepare/get/all/run/exec API as node:sqlite for everything this app uses.
+  const Database = createRequire(import.meta.url)('libsql');
+  const db = new Database(path, { syncUrl: url, authToken: process.env.TURSO_AUTH_TOKEN?.trim() });
+  db.sync();
+  console.log('Database: Turso (synced)');
+  return db as DB;
+}
+
+function finishOpen(db: DB): DB {
   db.exec(SCHEMA);
   const ins = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)');
   for (const [k, v] of Object.entries(DEFAULT_SETTINGS)) ins.run(k, v);

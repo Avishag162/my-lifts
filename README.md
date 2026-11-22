@@ -38,6 +38,7 @@ npm start
 
 - מסד הנתונים הוא קובץ SQLite. בשרת צריך דיסק קבוע (volume) ולהגדיר `DB_PATH` לקובץ שעליו, אחרת הנתונים נמחקים בכל עדכון.
 - בשרת עם https מגדירים `SECURE_COOKIES=true`.
+- בחינם: Render (תוכנית Free, לפי `render.yaml`) עם מסד נתונים חינמי ב-[Turso](https://turso.tech). מגדירים ב-Render את `TURSO_DATABASE_URL` ו-`TURSO_AUTH_TOKEN`, והנתונים נשמרים ב-Turso.
 - בטלפון: פותחים את הכתובת ו״הוספה למסך הבית״, והאפליקציה נפתחת כמו אפליקציה רגילה.
 
 ## להמשיך לפתח עם Claude Code
