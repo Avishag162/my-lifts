@@ -5,6 +5,7 @@ import { LineChart } from '../Chart.tsx';
 import { fmtDay } from '../dates.ts';
 import { ExerciseIcon } from '../icons.tsx';
 import { fmtKg } from './Log.tsx';
+import { asset } from '../asset.ts';
 
 interface MyExercise {
   exercise: ExerciseInfo;
@@ -42,7 +43,7 @@ function setsText(sets: SetEntry[]) {
 function Pic({ ex, size = 44 }: { ex: ExerciseInfo; size?: number }) {
   return (
     <div className="ex-pic" style={{ width: size, height: size, borderRadius: size > 50 ? 14 : 10 }}>
-      {ex.imageUrl ? <img src={ex.imageUrl} alt="" /> : <ExerciseIcon area={ex.bodyArea} size={size - 12} />}
+      {ex.imageUrl ? <img src={asset(ex.imageUrl)} alt="" /> : <ExerciseIcon area={ex.bodyArea} size={size - 12} />}
     </div>
   );
 }

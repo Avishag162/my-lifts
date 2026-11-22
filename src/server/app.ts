@@ -26,6 +26,8 @@ export interface AppDeps {
   db: DB;
   secret: string;
   secureCookies: boolean;
+  /** In-browser version (src/web/local): the data is on this phone only, so whoever opens the app is its owner. */
+  local?: boolean;
 }
 
 type Env = { Variables: { member: SessionMember; token: string } };
@@ -92,6 +94,15 @@ export function createApp(deps: AppDeps) {
   // Everything below needs to be logged in.
   app.use('/api/*', async (c, next) => {
     if (c.req.path.startsWith('/api/auth/') && c.req.path !== '/api/auth/logout' && c.req.path !== '/api/auth/logout-all') return next();
+    if (deps.local) {
+      const member = db
+        .prepare('SELECT id, name, phone, role, onboarded_at, password_hash IS NOT NULL AS has_password FROM members ORDER BY id LIMIT 1')
+        .get() as SessionMember | undefined;
+      if (!member) return c.json({ error: 'not_logged_in' }, 401);
+      c.set('member', member);
+      c.set('token', 'local');
+      return next();
+    }
     const token = getCookie(c, COOKIE);
     const member = auth.memberForToken(token);
     if (!member) return c.json({ error: 'not_logged_in' }, 401);

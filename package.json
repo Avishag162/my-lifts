@@ -11,13 +11,16 @@
     "start": "NODE_ENV=production tsx src/server/index.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "reset-password": "NODE_NO_WARNINGS=1 tsx scripts/reset-password.ts"
+    "reset-password": "NODE_NO_WARNINGS=1 tsx scripts/reset-password.ts",
+    "dev:local": "vite --mode local",
+    "build:local": "vite build --mode local"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.18",
     "hono": "^4.13.17",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "sql.js": "^1.10.0"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

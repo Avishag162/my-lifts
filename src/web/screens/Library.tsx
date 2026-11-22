@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ApiError, api, type Exercise } from '../api.ts';
 import { ExerciseIcon } from '../icons.tsx';
+import { asset } from '../asset.ts';
 
 export function LibrarySheet({ onPick, onClose }: { onPick: (exerciseId: number) => void; onClose: () => void }) {
   const [q, setQ] = useState('');
@@ -53,7 +54,7 @@ export function LibrarySheet({ onPick, onClose }: { onPick: (exerciseId: number)
           {list.map((e) => (
             <button key={e.id} className="lib-item" onClick={() => onPick(e.id)}>
               <span className="ex-pic">
-                {e.imageUrl ? <img src={e.imageUrl} alt="" /> : <ExerciseIcon area={e.bodyArea} size={32} />}
+                {e.imageUrl ? <img src={asset(e.imageUrl)} alt="" /> : <ExerciseIcon area={e.bodyArea} size={32} />}
               </span>
               <span style={{ flex: 1 }}>
                 <b style={{ display: 'block' }}>{e.name}</b>

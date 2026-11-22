@@ -4,13 +4,17 @@ export class ApiError extends Error {
   }
 }
 
+/** The in-browser version (vite --mode local): no server, everything is stored on this device. */
+export const IS_LOCAL = import.meta.env.MODE === 'local';
+
 export async function api<T = any>(path: string, body?: unknown): Promise<T> {
-  const res = await fetch(path, {
+  const init: RequestInit = {
     method: body === undefined ? 'GET' : 'POST',
     headers: body === undefined ? undefined : { 'content-type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
     credentials: 'same-origin',
-  });
+  };
+  const res = IS_LOCAL ? await (await import('./local/server.ts')).localFetch(path, init) : await fetch(path, init);
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new ApiError(res.status, data.error ?? 'משהו השתבש', data);
   return data as T;

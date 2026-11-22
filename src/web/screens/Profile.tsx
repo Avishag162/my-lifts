@@ -1,7 +1,7 @@
 import { InstallCard } from '../install.tsx';
 import { Icon } from '../ui-icons.tsx';
 import { useState } from 'react';
-import { api, type Me } from '../api.ts';
+import { IS_LOCAL, api, type Me } from '../api.ts';
 import { InjuryCard } from '../Injury.tsx';
 
 /** Optional: gender (for the wording of badges) and body weight (for the "x times bodyweight" badges). */
@@ -133,19 +133,79 @@ function AccountCard({ me }: { me: Me }) {
   }
   return (
     <div className="card" style={{ gap: 8 }}>
-      <b>שם וסיסמה</b>
+      <b>{IS_LOCAL ? 'שם' : 'שם וסיסמה'}</b>
       <div style={{ display: 'flex', gap: 8 }}>
         <input className="input" style={{ height: 44, flex: 1 }} aria-label="שם" value={name} onChange={(e) => setName(e.target.value)} />
         <button className="btn-ghost" disabled={!name.trim() || name === me.name} onClick={() => run('/api/me/name', { name }, 'השם נשמר')}>
           שמירה
         </button>
       </div>
-      <div style={{ display: 'flex', gap: 8 }}>
+      {!IS_LOCAL && <div style={{ display: 'flex', gap: 8 }}>
         <input className="input" style={{ height: 44, flex: 1 }} type="password" autoComplete="new-password" dir="ltr" placeholder="סיסמה חדשה" aria-label="סיסמה חדשה" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button className="btn-ghost" disabled={password.length < 6} onClick={() => run('/api/me/password', { password }, 'הסיסמה הוחלפה').then(() => setPassword(''))}>
           החלפה
         </button>
-      </div>
+      </div>}
+      {msg && <span className="muted">{msg}</span>}
+      {error && <span style={{ color: 'var(--danger)', fontSize: 14 }}>{error}</span>}
+    </div>
+  );
+}
+
+/** The on-device version keeps everything in this browser: a backup file guards against losing the phone or its data. */
+function BackupCard() {
+  const [msg, setMsg] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function download() {
+    setError(null);
+    setMsg(null);
+    try {
+      const { exportBackup } = await import('../local/server.ts');
+      const bytes = await exportBackup();
+      const name = `my-lifts-${new Date().toISOString().slice(0, 10)}.db`;
+      const file = new File([bytes as BlobPart], name, { type: 'application/octet-stream' });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: name }).catch((e) => {
+          if (e?.name !== 'AbortError') throw e;
+        });
+      } else {
+        const url = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = name;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 10_000);
+      }
+      setMsg('הגיבוי מוכן. שמרו אותו בקבצים או בענן.');
+    } catch (e: any) {
+      setError(e?.message ?? 'הגיבוי נכשל');
+    }
+  }
+
+  async function restore(file: File | undefined) {
+    if (!file) return;
+    setError(null);
+    setMsg(null);
+    if (!confirm('לשחזר מהגיבוי? כל מה שרשום עכשיו במכשיר יוחלף בתוכן הגיבוי.')) return;
+    try {
+      const { importBackup } = await import('../local/server.ts');
+      await importBackup(new Uint8Array(await file.arrayBuffer()));
+      location.reload();
+    } catch (e: any) {
+      setError(e?.message ?? 'השחזור נכשל');
+    }
+  }
+
+  return (
+    <div className="card" style={{ gap: 8 }}>
+      <b>גיבוי</b>
+      <span className="muted">האימונים שמורים רק במכשיר הזה. כדאי להוריד גיבוי מדי פעם, למקרה שהטלפון יוחלף או שנתוני האתר יימחקו.</span>
+      <button className="btn-ghost" onClick={download}>הורדת גיבוי</button>
+      <label className="btn-ghost" style={{ textAlign: 'center', cursor: 'pointer' }}>
+        שחזור מגיבוי
+        <input type="file" accept=".db,application/octet-stream" style={{ display: 'none' }} onChange={(e) => restore(e.target.files?.[0])} />
+      </label>
       {msg && <span className="muted">{msg}</span>}
       {error && <span style={{ color: 'var(--danger)', fontSize: 14 }}>{error}</span>}
     </div>
@@ -166,19 +226,24 @@ export function ProfileScreen({ me, onLoggedOut }: { me: Me; onLoggedOut: () => 
       <h1 className="h1">פרופיל</h1>
       <div className="card">
         <h2 className="h2">{me.name}</h2>
-        <div className="muted">ההתחברות נשמרת במכשיר הזה ל-3 חודשים.</div>
+        <div className="muted">{IS_LOCAL ? 'כל הנתונים שמורים במכשיר הזה בלבד.' : 'ההתחברות נשמרת במכשיר הזה ל-3 חודשים.'}</div>
       </div>
       <InjuryCard injury={me.injury ?? null} path="/api/me/injury" intro="יש לך פציעה או מגבלה? כתבו כאן כדי לזכור אותה." />
       <CompareProfileCard me={me} />
       <BirthdayCard me={me} />
       <AccountCard me={me} />
       <InstallCard />
-      <button className="btn-ghost" onClick={() => logout(false)} disabled={busy}>
-        <Icon name="logout" /> התנתקות
-      </button>
-      <button className="btn-ghost" onClick={() => logout(true)} disabled={busy}>
-        <Icon name="logout" /> התנתקות מכל המכשירים
-      </button>
+      {IS_LOCAL && <BackupCard />}
+      {!IS_LOCAL && (
+        <>
+          <button className="btn-ghost" onClick={() => logout(false)} disabled={busy}>
+            <Icon name="logout" /> התנתקות
+          </button>
+          <button className="btn-ghost" onClick={() => logout(true)} disabled={busy}>
+            <Icon name="logout" /> התנתקות מכל המכשירים
+          </button>
+        </>
+      )}
     </div>
   );
 }

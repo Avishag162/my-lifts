@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { asset } from './asset.ts';
 
 // Chrome/Android offers its own install dialog; we keep the event so a button can open it.
 interface InstallEvent extends Event {
@@ -9,7 +10,7 @@ let deferred: InstallEvent | null = null;
 const listeners = new Set<() => void>();
 
 export function setupInstall() {
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register(asset('/sw.js')).catch(() => {});
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferred = e as InstallEvent;

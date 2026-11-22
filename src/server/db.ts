@@ -156,10 +156,10 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
 export function openDb(path: string): DB {
   const tursoUrl = process.env.TURSO_DATABASE_URL?.trim();
   if (path !== ':memory:') mkdirSync(dirname(path), { recursive: true });
-  if (tursoUrl && path !== ':memory:') return finishOpen(openTurso(path, tursoUrl));
+  if (tursoUrl && path !== ':memory:') return initDb(openTurso(path, tursoUrl));
   const db = new DatabaseSync(path);
   if (path !== ':memory:') db.exec('PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000; PRAGMA synchronous = NORMAL;');
-  return finishOpen(db);
+  return initDb(db);
 }
 
 function openTurso(path: string, url: string): DB {
@@ -171,7 +171,8 @@ function openTurso(path: string, url: string): DB {
   return db as DB;
 }
 
-function finishOpen(db: DB): DB {
+/** Creates the tables (if missing) and default settings. Also used by the in-browser version (src/web/local). */
+export function initDb(db: DB): DB {
   db.exec(SCHEMA);
   const ins = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)');
   for (const [k, v] of Object.entries(DEFAULT_SETTINGS)) ins.run(k, v);

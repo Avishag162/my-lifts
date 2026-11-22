@@ -1,4 +1,7 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import initSqlJs, { type SqlJsStatic } from 'sql.js';
+import { initDb } from '../src/server/db.ts';
+import { wrapSqlJs } from '../src/web/local/sqljs-db.ts';
 import { createApp } from '../src/server/app.ts';
 import { openDb, type DB } from '../src/server/db.ts';
 import { seedLibrary } from '../src/server/library.ts';
@@ -23,11 +26,22 @@ function client(app: ReturnType<typeof createApp>) {
 
 const ex = (db: DB, name: string) => (db.prepare('SELECT id FROM exercises WHERE name = ?').get(name) as { id: number }).id;
 
-describe('single-user app', () => {
+let SQL: SqlJsStatic;
+beforeAll(async () => {
+  SQL = await initSqlJs();
+});
+
+// Every test runs twice: on node:sqlite (the server) and on sql.js (the version that runs in the phone's browser).
+const engines: [string, () => DB][] = [
+  ['node:sqlite', () => openDb(':memory:')],
+  ['sql.js', () => initDb(wrapSqlJs(new SQL.Database()))],
+];
+
+describe.each(engines)('single-user app (%s)', (_engine, makeDb) => {
   let db: DB;
   let app: ReturnType<typeof createApp>;
   beforeEach(() => {
-    db = openDb(':memory:');
+    db = makeDb();
     seedLibrary(db);
     app = createApp({ db, secret: 'test-secret', secureCookies: false });
   });

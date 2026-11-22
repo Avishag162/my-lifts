@@ -1,8 +1,9 @@
+import { asset } from './asset.ts';
 /** The app's name and mark. Change APP_NAME (and index.html / manifest.webmanifest) to rename the app. */
 export const APP_NAME = 'המשקלים שלי';
 
 function Mark({ size }: { size: number }) {
-  return <img src="/icon-192.png" alt="" width={size} height={size} style={{ borderRadius: size / 4.5, display: 'block' }} />;
+  return <img src={asset('/icon-192.png')} alt="" width={size} height={size} style={{ borderRadius: size / 4.5, display: 'block' }} />;
 }
 
 export function BrandBar() {

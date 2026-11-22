@@ -7,6 +7,7 @@ import { LibrarySheet } from './Library.tsx';
 import { drawBadgeStory, drawStory, shareStory } from '../story.ts';
 import { InstallCard } from '../install.tsx';
 import { Cues } from '../Cues.tsx';
+import { asset } from '../asset.ts';
 
 interface Workout {
   class: { id: number; classType: string; startsAt: string };
@@ -633,7 +634,7 @@ function ExerciseCard({ classId, item, onSaved, onDeleted, onOpenProgress }: { c
     <div className="card">
       <div className="ex-head">
         <div className={`ex-pic${ex ? '' : ' unknown'}`}>
-          {ex?.imageUrl ? <img src={ex.imageUrl} alt="" /> : ex ? <ExerciseIcon area={ex.bodyArea} size={52} /> : '?'}
+          {ex?.imageUrl ? <img src={asset(ex.imageUrl)} alt="" /> : ex ? <ExerciseIcon area={ex.bodyArea} size={52} /> : '?'}
         </div>
         <div style={{ flex: 1 }}>
           <h2 className="h2">{ex?.name ?? item.rawName}</h2>

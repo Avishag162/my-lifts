@@ -1,6 +1,7 @@
 import { APP_NAME } from './Logo.tsx';
 // A 1080×1920 image of the workout summary, sized for Instagram / WhatsApp stories.
 import { drawIcon } from './story-icons';
+import { asset } from './asset.ts';
 
 export interface StoryData {
   firstName: string;
@@ -131,7 +132,7 @@ function hexA(hex: string, a: number): string {
 
 /** The app's mark and name on a white pill, at the top of every story. */
 async function logoPill(ctx: CanvasRenderingContext2D, y: number) {
-  const icon = await loadImage('/icon-192.png');
+  const icon = await loadImage(asset('/icon-192.png'));
   const size = 84;
   ctx.save();
   ctx.font = '900 44px Heebo, sans-serif';
