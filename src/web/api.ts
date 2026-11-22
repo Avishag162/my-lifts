@@ -4,8 +4,8 @@ export class ApiError extends Error {
   }
 }
 
-/** The in-browser version (vite --mode local): no server, everything is stored on this device. */
-export const IS_LOCAL = import.meta.env.MODE === 'local';
+/** The in-browser version (vite --mode device): no server, everything is stored on this device. */
+export const IS_LOCAL = import.meta.env.MODE === 'device';
 
 export async function api<T = any>(path: string, body?: unknown): Promise<T> {
   const init: RequestInit = {

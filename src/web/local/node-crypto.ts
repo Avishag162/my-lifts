@@ -1,4 +1,4 @@
-// Stands in for `node:crypto` when the server code runs inside the browser (vite --mode local).
+// Stands in for `node:crypto` when the server code runs inside the browser (vite --mode device).
 // Only what src/server uses: randomBytes, randomUUID, createHmac('sha256'), scryptSync, timingSafeEqual.
 // The data never leaves the phone, so the password here only guards the screen; SHA-256 is plenty.
 

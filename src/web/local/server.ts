@@ -1,4 +1,4 @@
-// The in-browser version of the server (vite --mode local, published on GitHub Pages).
+// The in-browser version of the server (vite --mode device, published on GitHub Pages).
 // The same API code (src/server) runs inside the page against a SQLite database kept in this browser's IndexedDB,
 // so everything stays on the phone and no server is needed. api.ts sends its requests here instead of the network.
 import initSqlJs, { type SqlJsStatic } from 'sql.js';

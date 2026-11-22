@@ -12,8 +12,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "reset-password": "NODE_NO_WARNINGS=1 tsx scripts/reset-password.ts",
-    "dev:local": "vite --mode local",
-    "build:local": "vite build --mode local"
+    "dev:local": "vite --mode device",
+    "build:local": "vite build --mode device"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.18",

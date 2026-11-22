@@ -1,4 +1,4 @@
-// Stands in for node:sqlite, node:fs, node:path and node:module in the in-browser build (vite --mode local).
+// Stands in for node:sqlite, node:fs, node:path and node:module in the in-browser build (vite --mode device).
 // src/server/db.ts imports them for openDb(), which the browser never calls: it opens its database in ./sqljs-db.ts.
 const unavailable = (what: string) => () => {
   throw new Error(`${what} is not available in the browser`);
