@@ -15,8 +15,13 @@ jobs:
         with:
           name: lockfile
           path: package-lock.json
-      - run: npm run typecheck
-      - run: npm test
-      - run: npm run build
-      - run: npm run build:local
-      - run: cat dist/index.html && find dist -maxdepth 2 | head -40
+      - if: always()
+        run: npm run typecheck
+      - if: always()
+        run: npm test
+      - if: always()
+        run: npm run build
+      - if: always()
+        run: npm run build:local
+      - if: always()
+        run: cat dist/index.html && find dist -maxdepth 2 | head -40

@@ -21,7 +21,7 @@ function toBytes(v: string | Uint8Array, enc?: string): Uint8Array {
 
 // Lets `Buffer.from(hex, 'hex')` in auth.ts work in the browser.
 const g = globalThis as any;
-if (!g.Buffer) g.Buffer = { from: (v: string | Uint8Array, enc?: string) => Bytes.from(toBytes(v, enc)) };
+if (!g.Buffer) g.Buffer = { from: (v: string | Uint8Array, enc?: string) => new Bytes(toBytes(v, enc)) };
 
 const K = new Uint32Array([
   0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01,
@@ -100,7 +100,7 @@ export function createHmac(_alg: 'sha256', key: string | Uint8Array) {
       const msg = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
       let o = 0;
       for (const p of parts) msg.set(p, o), (o += p.length);
-      const out = Bytes.from(hmac(toBytes(key), msg));
+      const out = new Bytes(hmac(toBytes(key), msg));
       return enc ? out.toString(enc) : out;
     },
   };
@@ -111,7 +111,7 @@ export function createHmac(_alg: 'sha256', key: string | Uint8Array) {
 export function scryptSync(password: string | Uint8Array, salt: string | Uint8Array, keylen: number): Bytes {
   let d = hmac(toBytes(salt), toBytes(password));
   for (let i = 0; i < 2000; i++) d = hmac(toBytes(salt), d);
-  return Bytes.from(d.slice(0, keylen));
+  return new Bytes(d.slice(0, keylen));
 }
 
 export function timingSafeEqual(a: Uint8Array, b: Uint8Array): boolean {
