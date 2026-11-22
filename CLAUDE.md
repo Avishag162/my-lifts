@@ -18,6 +18,7 @@ SQLite through `node:sqlite`, React + Vite, vitest.
 | `src/server/library.ts`, `exercise-data.ts` | Starter exercises, pictures, videos, cues; adding exercises |
 | `src/server/time.ts` | The time zone (`TIME_ZONE`) |
 | `src/web/` | The React app (screens in `src/web/screens/`) |
+| `src/web/local/` | The on-device version (`--mode device`, GitHub Pages): the server code runs in the page on sql.js, saved to IndexedDB; browser stand-ins for the Node modules |
 | `scripts/draw-exercises.ts` | Draws the exercise SVGs in `src/web/public/exercises/` |
 
 ## How the data fits
@@ -31,4 +32,5 @@ gym's class tracker.
 - `npm run dev` for the app, `npm test` and `npm run typecheck` before committing.
 - The database is created on first run; new columns need a migration in `openDb` (e.g. `ALTER TABLE ... ADD COLUMN`
   wrapped in try/catch) so an existing `data/app.db` keeps working.
+- The server code also runs in the browser (`npm run build:local`): keep `src/server` free of new Node-only imports, or add a stand-in in `src/web/local/`. Tests run on both node:sqlite and sql.js.
 - Never commit `data/` or `*.db` (git-ignored): that is the user's real training history.

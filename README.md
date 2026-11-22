@@ -34,6 +34,10 @@ npm start
 
 ## להשתמש בזה מהטלפון
 
+**הדרך הפשוטה (חינם, בלי שרת):** הגרסה ״במכשיר״ מריצה את כל האפליקציה בתוך הדפדפן ושומרת את הנתונים בטלפון עצמו. בכל עדכון של `main` היא מתפרסמת אוטומטית ב-GitHub Pages (`.github/workflows/pages.yml`), בכתובת `https://<שם המשתמש>.github.io/my-lifts/`. בפעם הראשונה: ב-GitHub, Settings ← Pages ← Source: **GitHub Actions**. הנתונים לא יוצאים מהטלפון, ולכן כדאי מדי פעם ״הורדת גיבוי״ במסך הפרופיל.
+
+**או עם שרת** (הנתונים נשמרים בשרת ונגישים מכל מכשיר):
+
 האפליקציה צריכה לרוץ על שרת שהטלפון מגיע אליו. הדרך הפשוטה: לבקש מ-Claude Code ״תעלה את האפליקציה לשרת״ (למשל Render, Railway או Fly.io). שימו לב:
 
 - מסד הנתונים הוא קובץ SQLite. בשרת צריך דיסק קבוע (volume) ולהגדיר `DB_PATH` לקובץ שעליו, אחרת הנתונים נמחקים בכל עדכון.
@@ -68,6 +72,8 @@ npm test
 npm run build && npm start   # production-style, one server on http://localhost:3000
 npm run reset-password -- 'new password'
 ```
+
+On-device version: `npm run build:local` (`vite build --mode device`) bundles the server code into the page and keeps the SQLite database (sql.js) in the browser's IndexedDB; `.github/workflows/pages.yml` publishes it to GitHub Pages. `npm run dev:local` runs it locally.
 
 Environment variables (all optional): `PORT` (default 3000), `DB_PATH` (default `data/app.db`), `APP_SECRET` (session signing key; generated and stored in the database if not set), `SECURE_COOKIES=true` (when served over https).
 
