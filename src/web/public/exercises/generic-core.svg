@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<rect width="200" height="200" rx="24" fill="#F7F3F6"/>
+<line x1="50" y1="182" x2="150" y2="182" stroke="#C9B4C9" stroke-width="3" stroke-linecap="round"/>
+<polyline points="90,132 87,156 85,180" fill="none" stroke="#C9B4C9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><polyline points="110,132 113,156 115,180" fill="none" stroke="#C9B4C9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="74,60 66,94 62,124" fill="none" stroke="#C9B4C9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><polyline points="126,60 134,94 138,124" fill="none" stroke="#C9B4C9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="80" y="52" width="40" height="38" rx="10" fill="#C9B4C9"/>
+<rect x="82" y="92" width="36" height="24" rx="8" fill="#8E568E"/>
+<rect x="82" y="118" width="36" height="18" rx="8" fill="#C9B4C9"/>
+<circle cx="76" cy="58" r="10" fill="#C9B4C9"/><circle cx="124" cy="58" r="10" fill="#C9B4C9"/>
+<circle cx="100" cy="32" r="14" fill="#C9B4C9"/>
+</svg>

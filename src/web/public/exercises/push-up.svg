@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<rect width="200" height="200" rx="24" fill="#F7F3F6"/>
+<g transform="translate(25.7 21.9) scale(0.8623)">
+<line x1="-51.2" y1="186" x2="223.6" y2="186" stroke="#C9B4C9" stroke-width="3" stroke-linecap="round"/>
+
+<g opacity="0.55"><polyline points="90,140 51.5,151 13.1,162.1 13.1,174.1" fill="none" stroke="#C9B4C9" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><polyline points="136.1,126.8 136.1,154.8 136.1,181.8" fill="none" stroke="#C9B4C9" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><polyline points="90,140 140,125.7" fill="none" stroke="#C9B4C9" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><circle cx="159.5" cy="121.5" r="11" fill="#C9B4C9"/><polyline points="90,140 51.5,151 13.1,162.1 13.1,174.1" fill="none" stroke="#C9B4C9" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><polyline points="136.1,126.8 136.1,154.8 136.1,181.8" fill="none" stroke="#C9B4C9" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g><polyline points="90,160 50.4,165.6 10.8,171.1 10.8,183.1" fill="none" stroke="#B892B8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><polyline points="137.7,155 117.9,174.8 131.4,198.2" fill="none" stroke="#B892B8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><polyline points="90,160 141.7,154.6" fill="none" stroke="#8E568E" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><circle cx="161.6" cy="152.5" r="11" fill="#8E568E"/><polyline points="90,160 50.4,165.6 10.8,171.1 10.8,183.1" fill="none" stroke="#8E568E" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><polyline points="137.7,155 117.9,174.8 131.4,198.2" fill="none" stroke="#8E568E" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>
+</g>
+</svg>
